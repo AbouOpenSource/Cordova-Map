@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width,
+ height=device-height,        target-densitydpi=device-dpi" />
+    <title>You are here</title>
+
+    <link rel="stylesheet" href="css/themes/theme.min.css" />
+    <link rel="stylesheet" href="css/themes/jquery.mobile.icons.min.css" />
+
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile.structure-1.4.5.min.css" />
+
+
+    <!-- Include the jQuery library -->
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+    <!-- Include the jQuery Mobile library -->
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+
+</head>
+
+<body>
+    <!-- <div data-role="page" id="page1"> -->
+
+
+
+    <div data-role="main" class="ui-content">
+
+        <div data-role="header">
+            <h1>My position</h1>
+        </div>
+
+
+        <div id="map" style="height:500px;">
+        </div>
+        <div data-role="footer">
+            <div data-role="navbar" data-iconpos="bottom">
+                <ul>
+                    <li><a href="#" data-icon="grid">Summary</a></li>
+                    <li><a href="#" data-icon="star" class="ui-btn-active">Favs</a></li>
+                    <li><a href="#" data-icon="gear">Setup</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+    <!-- </div> -->
+
+
+
+
+
+
+    <script>
+        // Initialize and add the map
+    </script>
+
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVopOrp5HaI4c2pgBJLOhXOLQNoUZHYEc&callback=initMap"></script>
+    <script src="//cdn.jsdelivr.net/npm/pouchdb@7.1.1/dist/pouchdb.min.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-app.js">
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-firestore.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js"></script>
+
+    <script type="text/javascript" src="js/index.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,1 @@
+{"plugins":["cordova-plugin-whitelist","cordova-plugin-googlemaps","cordova-plugin-geolocation","cordova-sqlite-storage","cordova-plugin-splashscreen"]}
