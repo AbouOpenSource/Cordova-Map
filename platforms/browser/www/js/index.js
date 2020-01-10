@@ -1,6 +1,7 @@
 var db = null;
 var map = null;
 var positiontamp = null;
+var user = null;
 
 document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -16,8 +17,10 @@ function onDeviceReady() {
     // });
 
     initMap();
-    getPlace();
-    getList();
+    getActivities()
+    getListActivities()
+        //getPlace();
+        //getList();
     connect();
     $("#mypanel").trigger("updatelayout");
     $('#myPopupDiv').popup();
@@ -33,7 +36,6 @@ function onDeviceReady() {
         const title = txtTitle.value;
         const description = txtDecription.value;
         const date = txtDate.value;
-        console.log(title + description + date + positiontamp.longitude)
 
         saveActivity(title, description, date, positiontamp)
             //window.location = "index.html#list";
@@ -42,16 +44,9 @@ function onDeviceReady() {
     })
 
 
-
-
-
-
-
-
-
-
-
-
+    // setTimeout(function() {
+    //     window.location.reload(1);
+    // }, 5000);
 
 
 
@@ -73,6 +68,9 @@ function saveActivity(title, description, date, position) {
             date: date
         })
         .then(function() {
+            getActivities()
+            getListActivities()
+
             console.log("Document successfully written!");
         })
         .catch(function(error) {
@@ -119,7 +117,7 @@ function initMap() {
         var latLng = e.latLng;
 
         positiontamp = latLng
-        console.log(positiontamp)
+            // console.log(positiontamp)
         $('#myPopupDiv').popup('open');
         alert(latLng)
         console.log("click sur map")
@@ -208,7 +206,7 @@ function getPlace() {
                     map.setCenter(marker.getPosition());
 
                     infoWindow.setPosition(pos);
-                    infoWindow.setContent(renderText(doc.data().description, "image", doc.data().name));
+                    infoWindow.setContent(renderText(doc.data().description, doc.data().name));
 
                     infoWindow.open(map);
                     map.setCenter(pos);
@@ -225,6 +223,62 @@ function getPlace() {
         });
 
 }
+
+
+
+function getActivities() {
+    var db = firebase.firestore();
+    db.collection("activites").get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach((doc) => {
+                var pos = {
+                    lat: doc.data().latitude,
+                    lng: doc.data().longitude
+                };
+
+
+
+                $(doc.data().id).click(function(event) {
+                    alert(event.target.id)
+                });
+
+
+
+
+                console.log("je suis dedans")
+
+                var marker = new google.maps.Marker({
+                    position: pos,
+                    map: map,
+                    // animation: google.maps.Animation.DROP,
+                });
+                var infoWindow = new google.maps.InfoWindow({
+                    // content: doc.data().description
+                });
+
+                marker.addListener('click', function() {
+                    map.setZoom(15);
+                    map.setCenter(marker.getPosition());
+
+                    infoWindow.setPosition(pos);
+                    infoWindow.setContent(renderText(doc.data().description, doc.data().name, doc.data().date));
+
+                    infoWindow.open(map);
+                    map.setCenter(pos);
+
+
+
+                });
+
+
+            });
+
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+        });
+
+}
+
 
 
 
@@ -262,17 +316,20 @@ function addTodo(text) {
 }
 
 
+function renderText(description, name, date, id) {
+    console.log(date)
 
-
-function renderText(description, image, name) {
+    var d = new Date(Date.parse(date));
     return "<h3 >" + name + "</h3>" +
-        "<p>" + String(description).replace(/(.{40})/g, "$1<br>") + "</p>" + "<img  src=\"img/lion.jpg\" width=\"200\" height=\"200\"/>"
+        "<p>" + String(description).replace(/(.{40})/g, "$1<br>") + "<br>" +
+        +String(d) + "<br><button id=\"" + id + "\">Participate</button>"
+
+    +"<button onclick=\"document.getElementById(\'" + id + "\').click();\">Click Me</button>"
 }
 
 
 function getList() {
     var db = firebase.firestore();
-
     var ul = document.getElementById("listPlace");
     var li = document.createElement("li");
 
@@ -291,6 +348,45 @@ function getList() {
 
 
 }
+
+
+function getListActivities() {
+    var db = firebase.firestore();
+    var ul = document.getElementById("listPlace");
+
+
+
+
+    db.collection("activites").get()
+        .then((querySnapshot) => {
+
+            querySnapshot.forEach((doc) => {
+                var li = document.createElement("li");
+                li.appendChild(document.createTextNode(doc.data().name));
+                li.setAttribute("id", doc.data().id)
+                ul.appendChild(li);
+
+                // $(doc.data().id).click(function() {
+                //     if (confirm("Voulez vous participer?")) {
+                //         // Code à éxécuter si le l'utilisateur clique sur "OK"
+                //     } else {
+                //         // Code à éxécuter si l'utilisateur clique sur "Annuler" 
+                //     }
+                // });
+
+
+
+
+
+
+
+            })
+        })
+
+
+}
+
+
 
 
 
@@ -360,18 +456,25 @@ function connect() {
                 $(this).html(firebaseUser.email);
             });
 
-
+            user = firebaseUser.email
 
             window.location = "index.html#mapSide";
         } else {
             console.log('not logged in')
-            window.location = "index.html";
+                //window.location = "index.html";
         }
     });
 
+
+    btnLogouta.addEventListener('click', function() {
+        firebase.auth().signOut();
+        console.log("je suis deconnecté")
+    })
+
+
     btnLogout.addEventListener('click', function() {
         firebase.auth().signOut();
-        console.log("je suis de connecté")
+        console.log("je suis deconnecté")
     });
 
 }

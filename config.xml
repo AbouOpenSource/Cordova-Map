@@ -24,7 +24,10 @@
         <allow-intent href="itms-apps:*" />
     </platform>
 
-  <preference name="GOOGLE_MAPS_ANDROID_API_KEY" value="AIzaSyA7hm34ZU7thjJGc5wkJme_w8GkgCAFkzg" />
+  <preference name="GOOGLE_MAPS_ANDROID_API_KEY" value="AIzaSyA7hm34ZU7thjJGc5wkJme_w8GkgCAFkzg"/>
   <!-- <preference name="GOOGLE_MAPS_IOS_API_KEY" value="" /> -->
+<!-- 
+<preference name="SplashScreen" value="none"/> -->
+
 
 </widget>

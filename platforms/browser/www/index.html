@@ -93,6 +93,7 @@
             <button id="btnSignUp" class="ui-btn ui-btn-inline">
                 Sign up
             </button>
+            <a href="index.html" class="ui-btn ui-btn-inline">Log in</a>
         </div>
         <!-- /content -->
         <div data-role="footer">
@@ -125,9 +126,8 @@
             </div>
             <div data-role="navbar">
                 <ul>
-                    <li><a href="index.html#mapSide" data-icon="grid">Favorites</a></li>
-                    <li><a href="#list" data-icon="star">Save</a></li>
-                    <li><a href="#setting" data-icon="gear">Settings</a></li>
+                    <li><a href="index.html#mapSide" data-icon="grid">Map Activity</a></li>
+                    <li><a href="#list" data-icon="star">List of Activity</a></li>
                 </ul>
             </div>
         </div>
@@ -172,6 +172,8 @@
                 <ul data-role="listview" data-inset="true" data-theme="a">
                     <li>
                         <a href="#" class="username"></a>
+                        <a id="btnLogouta" data-rel="close" data-role="button" data-theme="c" data-icon="delete" data-inline="true">Close</a>
+
                     </li>
                 </ul>
                 <a data-rel="close" data-role="button" data-theme="a" data-icon="delete" data-inline="true">Close</a>
@@ -215,9 +217,8 @@
         <div data-role="footer">
             <div data-role="navbar">
                 <ul>
-                    <li><a href="index.html#mapSide" data-icon="grid">Favorites</a></li>
-                    <li><a href="#list" data-icon="star">Save</a></li>
-                    <li><a href="#setting" data-icon="gear">Settings</a></li>
+                    <li><a href="index.html#mapSide" data-icon="grid">Map Activity</a></li>
+                    <li><a href="#list" data-icon="star" class="ui-btn-active">List of Activity</a></li>
                 </ul>
             </div>
         </div>
@@ -256,56 +257,6 @@
 
 
     </div>
-
-    <div data-role="page" id="setting">
-        <div data-role="header">
-            <h1>Settings</h1>
-        </div>
-        <!-- /header -->
-        <div role="main" class="ui-content">
-
-
-        </div>
-        <!-- /content -->
-        <div data-role="footer">
-            <div data-role="navbar">
-                <ul>
-                    <li><a href="index.html#mapSide" data-icon="grid">Favorites</a></li>
-                    <li><a href="#list" data-icon="star">Save</a></li>
-                    <li><a href="#setting" data-icon="gear">Settings</a></li>
-                </ul>
-            </div>
-        </div>
-        <!-- /footer -->
-        <div data-role="footer">
-            <h4>Copyright</h4>
-        </div>
-
-
-        <div data-role="panel" id="panelDemoSetting" data-theme="b">
-            <!-- date-role="panel" creates a panel -->
-
-            <div class="panel-content">
-                <h3>Panel Contents</h3>
-                <ul data-role="listview" data-inset="true" data-theme="a">
-                    <li>
-                        <a href="#" class="username"></a>
-                    </li>
-                </ul>
-                <a data-rel="close" data-role="button" data-theme="a" data-icon="delete" data-inline="true">Close</a>
-            </div>
-            <!-- /.panel-content-->
-
-        </div>
-        <!-- /panelDemo -->
-
-
-
-    </div>
-
-
-
-
 
 
 
