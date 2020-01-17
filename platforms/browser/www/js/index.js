@@ -2,32 +2,24 @@ var db = null;
 var map = null;
 var positiontamp = null;
 var user = null;
-
+var button = null;
+var local_db = null;
+var participation = null;
+var infoWindow = null;
 document.addEventListener("deviceready", onDeviceReady, false);
 
 // device APIs are available
 //
 function onDeviceReady() {
-
-    // //saveData();
-    // db = window.sqlitePlugin.openDatabase({
-    //     name: 'my.db',
-    //     location: 'default',
-    //     androidDatabaseProvider: 'system'
-    // });
-
     initMap();
     getActivities()
     getListActivities()
-        //getPlace();
-        //getList();
     connect();
     $("#mypanel").trigger("updatelayout");
     $('#myPopupDiv').popup();
     $('#cancel').click(function() {
         $("#myPopupDiv").popup("close")
     })
-
     $('#validate').click(function() {
 
         const txtTitle = document.getElementById('txtTitle')
@@ -36,24 +28,135 @@ function onDeviceReady() {
         const title = txtTitle.value;
         const description = txtDecription.value;
         const date = txtDate.value;
-
         saveActivity(title, description, date, positiontamp)
-            //window.location = "index.html#list";
-
-
     })
-
-
-    // setTimeout(function() {
-    //     window.location.reload(1);
-    // }, 5000);
-
-
-
-
-
+    loadActivityAll()
+    local_db = window.openDatabase("Database", "1.0", "Database particpate", 200000);
+    local_db.transaction(createDB, errorCreating, successCreating);
+    // local_db.transaction(searchIfInDBTest, error, success)
+    loadMyParticpate();
 }
 
+function createDB(tx) {
+    //  tx.executeSql('DROP TABLE IF EXISTS PARTICIPATIONS');
+
+    tx.executeSql('CREATE TABLE IF NOT EXISTS PARTICIPATIONS (id INTEGER PRIMARY KEY, name)');
+}
+
+
+function errorCreating(item, err) {
+    alert("Error creating SQL: " + err);
+}
+
+
+function successCreating() {
+    alert("success DB creating");
+}
+
+
+function error(item, err) {
+    alert("Error SQL: " + err);
+}
+
+function success(item, err) {
+    alert("Success: " + err);
+}
+
+function successCB() {
+    alert("success DB create");
+}
+
+function insert(item) {
+    item.executeSql('INSERT INTO PARTICIPATIONS (name) VALUES ("' + participation + '")');
+}
+
+function searchIfInDB(item) {
+    item.executeSql('SELECT * FROM PARTICIPATIONS WHERE name="' + participation + '"', [], callbackSuccess);
+}
+
+function searchIfInDBTest(item) {
+    item.executeSql('SELECT * FROM PARTICIPATIONS', [], callback);
+}
+
+function callback(tx, results) {
+    var element = ""
+    var strTxt =
+        "<div data-role=\"page\" id=\"participate\">" +
+        "<div data-role=\"header\">" + "Mes participations" +
+        "</div>" +
+        "<div role = \"main\" class = \"ui-content\" >" +
+        "<ul data-role=\"listview\" data-inset=\"true\" data-theme=\"a\">"
+
+
+
+    if (results.rows.length == 0) {
+        alert("0")
+    } else {
+        alert("1")
+
+
+        for (var i = 0; i < results.rows.length; i++) {
+            var docRef = db.collection("activites").doc();
+            docRef.get().then(function(doc) {
+                // Document was found in the cache. If no cached document exists,
+                // an error will be returned to the 'catch' block below.
+                element += "<li>" + doc.data() + "</li>"
+
+                console.log("Cached document data:", );
+            }).catch(function(error) {
+                console.log("Error getting cached document:", error);
+            });
+            //var activite = db.collection('activites').doc(results.rows.item(i).name).get()
+            // element += "<li>" + results.rows.item(i).name + "</li>"
+
+        }
+
+
+    }
+    strTxt = strTxt + element
+    strTxt += "</ul></div><div data-role=\"footer\" data-position=\"fixed\"><h4>Copyright</h4></div></div>"
+    $("body").append(strTxt);
+}
+
+
+
+function callbackSuccess(tx, results) {
+    if (results.rows.length == 0) {
+        local_db.transaction(insert, errorCreating, successCreating);
+        alert("0")
+    } else {
+        alert("1")
+    }
+}
+
+function loadMyParticpate() {
+    local_db.transaction(searchIfInDBTest, error, success)
+}
+
+
+
+
+
+
+
+function queryDB(tx) {
+    tx.executeSql('SELECT * FROM PARTICIPATIONS', [], querySuccess, errorCB);
+}
+
+function querySuccess(tx, results) {
+    console.log("Returned rows = " + results.rows.length);
+    // this will be true since it was a select statement and so rowsAffected was 0
+    if (!results.rowsAffected) {
+        console.log('No rows affected!');
+        return false;
+    }
+    // for an insert statement, this property will return the ID of the last inserted row
+    console.log("Last inserted row ID = " + results.insertId);
+}
+
+function errorCB(err) {
+    alert("Error processing SQL: " + err.code);
+}
 
 
 function saveActivity(title, description, date, position) {
@@ -65,7 +168,8 @@ function saveActivity(title, description, date, position) {
             longitude: position.lng(),
             latitude: position.lat(),
             description: description,
-            date: date
+            date: date,
+            participants: []
         })
         .then(function() {
             getActivities()
@@ -78,20 +182,6 @@ function saveActivity(title, description, date, position) {
         });
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -112,32 +202,37 @@ function initMap() {
             zoom: 10,
             center: defa
         });
+    //  if (user === 'admin@admin.com') {
+
+
+
     google.maps.event.addListener(map, "click", function(e) {
 
         var latLng = e.latLng;
 
         positiontamp = latLng
-            // console.log(positiontamp)
         $('#myPopupDiv').popup('open');
-        alert(latLng)
         console.log("click sur map")
     });
 
-    // Try HTML5 geolocation.
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
 
-        }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-        });
-    } else {
-        // Browser doesn't support Geolocation
-        handleLocationError(false, infoWindow, map.getCenter());
-    }
+    //  }
+
+    // Try HTML5 geolocation.
+    /*  if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+              var pos = {
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude
+              };
+
+          }, function() {
+              handleLocationError(true, infoWindow, map.getCenter());
+          });
+      } else {
+          // Browser doesn't support Geolocation
+          handleLocationError(false, infoWindow, map.getCenter());
+      }*/
 
 }
 
@@ -165,20 +260,6 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 db = firebase.firestore();
 
-/*
-db.collection("posts").get()
-    .then((querySnapshot) => {
-
-        querySnapshot.forEach((doc) => {
-            console.log(doc.id);
-        });
-
-    }).catch(function(error) {
-        console.log("Error getting document:", error);
-    });
-
-*/
-
 function getPlace() {
     var db = firebase.firestore();
     db.collection("places").get()
@@ -200,22 +281,14 @@ function getPlace() {
                 var infoWindow = new google.maps.InfoWindow({
                     content: doc.data().description
                 });
-
                 marker.addListener('click', function() {
                     map.setZoom(8);
                     map.setCenter(marker.getPosition());
-
                     infoWindow.setPosition(pos);
                     infoWindow.setContent(renderText(doc.data().description, doc.data().name));
-
                     infoWindow.open(map);
                     map.setCenter(pos);
-
-
-
                 });
-
-
             });
 
         }).catch(function(error) {
@@ -235,18 +308,9 @@ function getActivities() {
                     lat: doc.data().latitude,
                     lng: doc.data().longitude
                 };
-
-
-
                 $(doc.data().id).click(function(event) {
                     alert(event.target.id)
                 });
-
-
-
-
-                console.log("je suis dedans")
-
                 var marker = new google.maps.Marker({
                     position: pos,
                     map: map,
@@ -256,21 +320,36 @@ function getActivities() {
                     // content: doc.data().description
                 });
 
+                console.log(doc.id)
+
+
                 marker.addListener('click', function() {
                     map.setZoom(15);
                     map.setCenter(marker.getPosition());
-
+                    /*renderText(doc.data().description, doc.data().name, doc.data().date)*/
                     infoWindow.setPosition(pos);
-                    infoWindow.setContent(renderText(doc.data().description, doc.data().name, doc.data().date));
+                    infoWindow.setContent("<h2>" + doc.data().name + "</h2>" +
+                        "<p>" + doc.data().description + "</p>" +
+                        "<span style=\"color:blue\" style=\"font-style:italic\">" + doc.data().date + "</span>" +
+                        "<button onclick=\"document.getElementById(\'" + doc.id + "\').click();;\">" + "Participate" + "</button>"
+                    );
 
                     infoWindow.open(map);
                     map.setCenter(pos);
+                    button = document.createElement("button");
+                    button.setAttribute("id", doc.id)
 
+                    // 2. Append somewhere
+                    var body = document.getElementsByTagName("body")[0];
+                    body.appendChild(button);
 
+                    // 3. Add event handler
+                    button.addEventListener("click", function() {
+                        addParticipate(this.id)
+                            // console.log("salut")
+                    });
 
                 });
-
-
             });
 
         }).catch(function(error) {
@@ -279,6 +358,55 @@ function getActivities() {
 
 }
 
+
+
+function addParticipate(id) {
+
+    participation = id;
+
+    var participateAct = db.collection("activites").doc(id);
+    var act = participateAct.get()
+
+    act.then(function(doc) {
+        if (doc.exists) {
+
+            console.log(doc.data())
+
+            if (confirm("Voulez vous participer?")) {
+                var participateAct = db.collection("activites").doc(id);
+                return participateAct.set({
+                        name: doc.data().name,
+                        description: doc.data().description,
+                        longitude: doc.data().longitude,
+                        latitude: doc.data().latitude,
+                        date: doc.data().date,
+                        participants: [user].concat(doc.data().participants)
+                    })
+                    .then(function() {
+                        console.log("Document successfully updated!");
+                    })
+                    .catch(function(error) {
+                        console.error("Error updating document: ", error);
+                    });
+
+            } else {
+                alert("annuler")
+            }
+
+
+
+        } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+        }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+    });
+
+    alert(participation)
+    local_db.transaction(insert, errorCB, successCB)
+
+}
 
 
 
@@ -302,18 +430,6 @@ function saveData(nom, loc, description) {
 
 }
 
-function addTodo(text) {
-    var todo = {
-        _id: new Date().toISOString(),
-        title: text,
-        completed: false
-    };
-    dbPouchDB.put(todo, function callback(err, result) {
-        if (!err) {
-            console.log('Successfully posted a todo!');
-        }
-    });
-}
 
 
 function renderText(description, name, date, id) {
@@ -322,9 +438,8 @@ function renderText(description, name, date, id) {
     var d = new Date(Date.parse(date));
     return "<h3 >" + name + "</h3>" +
         "<p>" + String(description).replace(/(.{40})/g, "$1<br>") + "<br>" +
-        +String(d) + "<br><button id=\"" + id + "\">Participate</button>"
-
-    +"<button onclick=\"document.getElementById(\'" + id + "\').click();\">Click Me</button>"
+        +String(d) + "<br><button id=\"" + id + "\">Participate</button>" +
+        "<button onclick=\"document.getElementById(\'" + id + "\').click();\">Click Me</button>"
 }
 
 
@@ -354,7 +469,11 @@ function getListActivities() {
     var db = firebase.firestore();
     var ul = document.getElementById("listPlace");
 
-
+    var child = ul.lastElementChild;
+    while (child) {
+        ul.removeChild(child);
+        child = ul.lastElementChild;
+    }
 
 
     db.collection("activites").get()
@@ -363,23 +482,11 @@ function getListActivities() {
             querySnapshot.forEach((doc) => {
                 var li = document.createElement("li");
                 li.appendChild(document.createTextNode(doc.data().name));
-                li.setAttribute("id", doc.data().id)
+                li.setAttribute("id", "li" + doc.id)
                 ul.appendChild(li);
-
-                // $(doc.data().id).click(function() {
-                //     if (confirm("Voulez vous participer?")) {
-                //         // Code à éxécuter si le l'utilisateur clique sur "OK"
-                //     } else {
-                //         // Code à éxécuter si l'utilisateur clique sur "Annuler" 
-                //     }
-                // });
-
-
-
-
-
-
-
+                li.addEventListener('click', function(event) {
+                    window.location = "index.html#" + event.target.id;
+                });
             })
         })
 
@@ -426,9 +533,33 @@ function connect() {
         const number = txtNumber.value
         const auth = firebase.auth();
         //Sign up
-        const promise = auth.createUserWithEmailAndPassword(email, password).then(result => {
 
-            this.SetUserData(result.user, name, number);
+
+
+
+
+
+
+
+
+
+        const promise = auth.createUserWithEmailAndPassword(email, password).then(result => {
+            const ref = db.collection('users').doc();
+            const id = ref.id
+
+            db.collection("users").doc(id).set({
+                    name: name,
+                    number: number,
+                    email: email,
+                    password: password
+                })
+                .then(function() {
+
+                    console.log("Document successfully written!");
+                })
+                .catch(function(error) {
+                    console.error("Error writing document: ", error);
+                });
 
 
         });
@@ -443,14 +574,6 @@ function connect() {
     firebase.auth().onAuthStateChanged(firebaseUser => {
         if (firebaseUser) {
             console.log(firebaseUser.email)
-
-
-
-
-            // var usernames = document.getElementsByClassName('username');
-            // for (var i = 0; i < usernames.length; i++) {
-            //     divs[i].style.height = rand + 'px';
-            // }
 
             $('.username').each(function() {
                 $(this).html(firebaseUser.email);
@@ -477,4 +600,82 @@ function connect() {
         console.log("je suis deconnecté")
     });
 
+}
+
+
+
+
+
+function loadActivityAll() {
+    var strTxt = "";
+    var ulTxt = "";
+
+    db.collection("activites").get()
+        .then((querySnapshot) => {
+
+            querySnapshot.forEach((doc) => {
+                console.log("doc.id")
+                console.log(doc.data().participants)
+                strTxt =
+                    "<div data-role=\"page\" id=\"" + "li" + doc.id + "\">" +
+                    "<div data-role=\"header\">" + doc.data().name +
+                    "</div>" +
+                    "<div role = \"main\" class = \"ui-content\" >" +
+                    "<p>" + doc.data().description + "</p>"
+                ulTxt = "<h2>The participants</h2>" +
+                    "<ul data-role = \"listview\" data-theme = \"c\">";
+                if (doc.data().participants != null) {
+                    for (item in doc.data().participants) {
+                        ulTxt += "<li>" + doc.data().participants[item] + "</li>"
+                    }
+
+                } else {
+                    ulTxt += "There are no participants"
+                }
+
+                ulTxt += "</ul>" + "</div>" + "</div>"
+
+
+
+                ulTxt += "<div data-role=\"footer\" data-position=\"fixed\"><h4>Copyright</h4></div>"
+                $("body").append(strTxt + ulTxt);
+
+            })
+        })
+
+
+
+
+
+}
+
+function loadActivity(id) {
+
+    var name = document.getElementById("name").innerHTML = '';
+    var description = document.getElementById("description").innerHTML = '';
+    var listParticipant = document.getElementById("listParticipant");
+    var child = listParticipant.lastElementChild;
+    while (child) {
+        listParticipant.removeChild(child);
+        child = listParticipant.lastElementChild;
+    }
+
+    var participateAct = db.collection("activites").doc(id);
+    var act = participateAct.get()
+
+    act.then(function(doc) {
+        console.log(doc.data())
+
+        if (doc.exists) {
+            name.innerHTML = doc.data().name
+            description.innerHTML = doc.data().description
+            for (item in doc.data().participants) {
+
+                var li = document.createElement("li");
+                li.appendChild(document.createTextNode(item));
+                listParticipant.appendChild(li);
+            }
+        }
+    });
+    window.location = "index.html#show";
 }

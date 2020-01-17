@@ -6,7 +6,7 @@
     <meta name="format-detection" content="telephone=no" />
     <meta name="msapplication-tap-highlight" content="no" />
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width,
- height=device-height,        target-densitydpi=device-dpi" />
+ height=device-height" />
     <title>You are here</title>
 
     <link rel="stylesheet" href="css/themes/theme.min.css" />
@@ -21,60 +21,240 @@
     <!-- Include the jQuery Mobile library -->
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
 
-
 </head>
 
 <body>
-    <!-- <div data-role="page" id="page1"> -->
 
 
-
-    <div data-role="main" class="ui-content">
-
+    <div data-role="page">
         <div data-role="header">
-            <h1>My position</h1>
-        </div>
+            <!-- <a href="#panelDemo" class="btn-ui bars"></a> -->
+
+            <h1>Login Page</h1>
 
 
-        <div id="map" style="height:500px;">
+
         </div>
-        <div data-role="footer">
-            <div data-role="navbar" data-iconpos="bottom">
-                <ul>
-                    <li><a href="#" data-icon="grid">Summary</a></li>
-                    <li><a href="#" data-icon="star" class="ui-btn-active">Favs</a></li>
-                    <li><a href="#" data-icon="gear">Setup</a></li>
+        <!-- /header -->
+        <div role="main" class="ui-content">
+            <input id="txtEmail1" type="email" placeholder="Email">
+            <input id="txtPassword1" type="password" placeholder="Password">
+
+            <button id="btnLogin" class="ui-btn">
+                Log in
+            </button>
+
+
+
+            <a href="#createUser" class="ui-btn ui">Create a new account</a>
+        </div>
+        <!-- /content -->
+        <div data-role="footer" data-position="fixed">
+            <h4>Copyright</h4>
+        </div>
+        <!-- /footer -->
+
+        <div data-role="panel" id="panelDemo" data-theme="b">
+            <!-- date-role="panel" creates a panel -->
+
+            <div class="panel-content">
+                <h3>User details</h3>
+                <ul data-role="listview" data-inset="true" data-theme="a">
+                    <li>
+                        <a href="#" class="username"></a>
+                    </li>
+                    <button id="btnLogout" class="ui-btn ui-btn-inline">
+                            Log out
+                        </button></li>
+
                 </ul>
+                <a data-rel="close" data-role="button" data-theme="a" data-icon="delete" data-inline="true">Close</a>
             </div>
+            <!-- /.panel-content-->
 
         </div>
-
 
 
     </div>
-
-    <!-- </div> -->
-
+    <!-- /page -->
 
 
 
+    <div data-role="page" id="createUser">
+        <div data-role="header">
+            <h1>Login Page</h1>
+        </div>
+        <!-- /header -->
+        <div role="main" class="ui-content">
+            <input id="txtName" type="text" placeholder="Name">
+            <input id="txtEmail" type="email" placeholder="Email">
+            <input id="txtPassword" type="password" placeholder="Password">
+            <input id="txtNumber" type="tel" placeholder="CellPhone">
+            <button id="btnSignUp" class="ui-btn ui-btn-inline">
+                Sign up
+            </button>
+            <a href="index.html" class="ui-btn ui-btn-inline">Log in</a>
+        </div>
+        <!-- /content -->
+        <div data-role="footer" data-position="fixed">
+            <h4>Copyright</h4>
+        </div>
+        <!-- /footer -->
+    </div>
+    <!-- /page -->
 
 
-    <script>
-        // Initialize and add the map
-    </script>
+
+    <!-- <div data-role="page" id="page1"> -->
+
+    <div data-role="page" id="mapSide">
+        <div data-role="header">
+            <a href="#panelDemo" class="ui-btn ui-shadow ui-corner-all ui-icon-plus ui-btn-icon-notext ui-btn-b ui-btn-inline">Plus</a>
+            <h1>Activity Map</h1>
+            <a href="#popupInfo" data-rel="popup" data-transition="pop" class="my-tooltip-btn ui-btn ui-alt-icon ui-nodisc-icon ui-btn-inline ui-icon-info ui-btn-icon-notext" title="Learn more">Learn more</a>
+
+        </div>
+        <!-- /header -->
+        <div role="main" class="ui-content">
+            <div id="map" style="height:450px;">
+            </div>
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="index.html#mapSide" data-icon="grid">Map Activity</a></li>
+
+                    <li><a href="#list" data-icon="star">List of Activity</a></li>
+                    <li><a href="#participate" data-icon="star">List of Activity</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- /content -->
+        <div data-role="footer" data-position="fixed">
+            <h4>Copyright</h4>
+        </div>
+        <!-- /footer -->
 
 
-    <script type="text/javascript" src="cordova.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVopOrp5HaI4c2pgBJLOhXOLQNoUZHYEc&callback=initMap"></script>
-    <script src="//cdn.jsdelivr.net/npm/pouchdb@7.1.1/dist/pouchdb.min.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-app.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-firestore.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js"></script>
 
-    <script type="text/javascript" src="js/index.js"></script>
+        <div data-role="popup" id="myPopupDiv" data-theme="a" class="ui-content" class="ui-corner-all">
+            <form action="index.html#mapSide">
+
+
+
+                <div style="padding:10px 20px;">
+                    <h3>Add activity</h3>
+                    <label for="txtTitle" class="ui-hidden-accessible">Title:</label>
+                    <input id="txtTitle" name="title" type="text" data-mini="true" placeholder="Title" data-theme="a" required>
+                    <label for="txtDecription" class="ui-hidden-accessible">Password:</label>
+                    <textarea id="txtDecription" name="decription" id="" cols="20" rows="10" placeholder="Decription de l'activité" required></textarea>
+                    <input type="date" name="pass" id="txtDate" value="" placeholder="Date" data-theme="a">
+
+                    <button id="validate" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">Validate</button>
+                    <button id="cancel" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">Cancel</button>
+
+
+                </div>
+            </form>
+        </div>
+
+
+
+
+        <div data-role="popup" id="popupInfo" class="ui-content" data-theme="a" style="max-width:350px;">
+            <p> <strong>Je ne sais pas comment utiliser</strong> Vous pouvez ajoutez un evenment en cliquant sur la carte au lieu souhaiter</p>
+        </div>
+
+        <div data-role="panel" id="panelDemo" data-theme="b">
+            <!-- date-role="panel" creates a panel -->
+
+            <div class="panel-content">
+                <h3>User details</h3>
+                <ul data-role="listview" data-inset="true" data-theme="a">
+                    <li>
+                        <a href="#" class="username"></a>
+                        <a id="btnLogouta" data-rel="close" data-role="button" data-theme="c" data-icon="delete" data-inline="true">Close</a>
+
+                    </li>
+                </ul>
+                <a data-rel="close" data-role="button" data-theme="a" data-icon="delete" data-inline="true">Close</a>
+            </div>
+            <!-- /.panel-content-->
+
+        </div>
+        <!-- /panelDemo -->
+
+
+    </div>
+    <!-- /page -->
+
+
+    <div data-role="page" id="list">
+        <div data-role="header">
+            <h1>List</h1>
+        </div>
+        <!-- /header -->
+        <div role="main" class="ui-content">
+            <ul data-role="listview" data-theme="c" data-filter="true" id="listPlace">
+
+            </ul>
+
+        </div>
+        <!-- /content -->
+        <div data-position="fixed">
+            <div data-role="navbar">
+                <ul>
+                    <li><a href="index.html#mapSide" data-icon="grid">Map Activity</a></li>
+                    <li><a href="#list" data-icon="star" class="ui-btn-active">List of Activity</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- /footer -->
+        <div data-role="footer" data-position="fixed">
+            <h4>Copyright</h4>
+        </div>
+
+        <div data-role="panel" id="panelDemoFavorite" data-theme="b">
+            <!-- date-role="panel" creates a panel -->
+
+            <div class="panel-content">
+                <h3>User details</h3>
+                <ul data-role="listview" data-inset="true" data-theme="a">
+                    <li>
+                        <a href="#" class="username"></a>
+                    </li>
+                </ul>
+                <a data-rel="close" data-role="button" data-theme="a" data-icon="delete" data-inline="true">Close</a>
+            </div>
+            <!-- /.panel-content-->
+
+        </div>
+        <!-- /panelDemo -->
+
+
+
+
+
+
+
+
+
+
+
+
+        <script>
+            // Initialize and add the map
+        </script>
+
+
+        <script type="text/javascript" src="cordova.js"></script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVopOrp5HaI4c2pgBJLOhXOLQNoUZHYEc&callback=initMap"></script>
+        <script src="//cdn.jsdelivr.net/npm/pouchdb@7.1.1/dist/pouchdb.min.js">
+        </script>
+        <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-app.js">
+        </script>
+        <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-auth.js"></script>
+        <!-- <script src="https://maps.googleapis.com/maps/api/js"></script> -->
+        <script type="text/javascript" src="js/index.js"></script>
 
 </body>
 

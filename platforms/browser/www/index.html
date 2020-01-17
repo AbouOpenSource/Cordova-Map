@@ -49,7 +49,7 @@
             <a href="#createUser" class="ui-btn ui">Create a new account</a>
         </div>
         <!-- /content -->
-        <div data-role="footer">
+        <div data-role="footer" data-position="fixed">
             <h4>Copyright</h4>
         </div>
         <!-- /footer -->
@@ -58,7 +58,7 @@
             <!-- date-role="panel" creates a panel -->
 
             <div class="panel-content">
-                <h3>Panel Contents</h3>
+                <h3>User details</h3>
                 <ul data-role="listview" data-inset="true" data-theme="a">
                     <li>
                         <a href="#" class="username"></a>
@@ -96,18 +96,12 @@
             <a href="index.html" class="ui-btn ui-btn-inline">Log in</a>
         </div>
         <!-- /content -->
-        <div data-role="footer">
+        <div data-role="footer" data-position="fixed">
             <h4>Copyright</h4>
         </div>
         <!-- /footer -->
     </div>
     <!-- /page -->
-
-
-
-
-
-
 
 
 
@@ -122,36 +116,41 @@
         </div>
         <!-- /header -->
         <div role="main" class="ui-content">
-            <div id="map" style="height:500px;">
+            <div id="map" style="height:450px;">
             </div>
             <div data-role="navbar">
                 <ul>
                     <li><a href="index.html#mapSide" data-icon="grid">Map Activity</a></li>
+
                     <li><a href="#list" data-icon="star">List of Activity</a></li>
+                    <li><a href="#participate" data-icon="star">List of Activity</a></li>
                 </ul>
             </div>
         </div>
         <!-- /content -->
-        <div data-role="footer">
+        <div data-role="footer" data-position="fixed">
             <h4>Copyright</h4>
         </div>
         <!-- /footer -->
 
 
 
-        <div data-role="popup" id="myPopupDiv" data-theme="a" class="ui-content" action="index.html#list" method="post">
-            <form>
-                <input id="txtTitle" name="title" type="text" data-mini="true" placeholder="Title" required>
-                <textarea id="txtDecription" name="decription" id="" cols="30" rows="10" placeholder="Decription de l'activité" required></textarea>
-                <input id="txtDate" type="date" placeholder="Date" required>
-                <div class="ui-input-btn ui-btn ui-mini">
-                    Validate
-                    <input id="validate" type="button" data-enhanced="true" value="Validate">
+        <div data-role="popup" id="myPopupDiv" data-theme="a" class="ui-content" class="ui-corner-all">
+            <form action="index.html#mapSide">
 
-                </div>
-                <div class="ui-input-btn ui-btn ui-mini">
-                    Cancel
-                    <input id="cancel" type="button" data-enhanced="true" value="Cancel">
+
+
+                <div style="padding:10px 20px;">
+                    <h3>Add activity</h3>
+                    <label for="txtTitle" class="ui-hidden-accessible">Title:</label>
+                    <input id="txtTitle" name="title" type="text" data-mini="true" placeholder="Title" data-theme="a" required>
+                    <label for="txtDecription" class="ui-hidden-accessible">Password:</label>
+                    <textarea id="txtDecription" name="decription" id="" cols="20" rows="10" placeholder="Decription de l'activité" required></textarea>
+                    <input type="date" name="pass" id="txtDate" value="" placeholder="Date" data-theme="a">
+
+                    <button id="validate" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">Validate</button>
+                    <button id="cancel" class="ui-btn ui-corner-all ui-shadow ui-btn-b ui-btn-icon-left ui-icon-check">Cancel</button>
+
 
                 </div>
             </form>
@@ -168,7 +167,7 @@
             <!-- date-role="panel" creates a panel -->
 
             <div class="panel-content">
-                <h3>Panel Contents</h3>
+                <h3>User details</h3>
                 <ul data-role="listview" data-inset="true" data-theme="a">
                     <li>
                         <a href="#" class="username"></a>
@@ -182,20 +181,6 @@
 
         </div>
         <!-- /panelDemo -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     </div>
@@ -214,7 +199,7 @@
 
         </div>
         <!-- /content -->
-        <div data-role="footer">
+        <div data-position="fixed">
             <div data-role="navbar">
                 <ul>
                     <li><a href="index.html#mapSide" data-icon="grid">Map Activity</a></li>
@@ -223,7 +208,7 @@
             </div>
         </div>
         <!-- /footer -->
-        <div data-role="footer">
+        <div data-role="footer" data-position="fixed">
             <h4>Copyright</h4>
         </div>
 
@@ -231,7 +216,7 @@
             <!-- date-role="panel" creates a panel -->
 
             <div class="panel-content">
-                <h3>Panel Contents</h3>
+                <h3>User details</h3>
                 <ul data-role="listview" data-inset="true" data-theme="a">
                     <li>
                         <a href="#" class="username"></a>
@@ -255,27 +240,21 @@
 
 
 
-
-    </div>
-
-
-
-
-    <script>
-        // Initialize and add the map
-    </script>
+        <script>
+            // Initialize and add the map
+        </script>
 
 
-    <script type="text/javascript" src="cordova.js"></script>
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVopOrp5HaI4c2pgBJLOhXOLQNoUZHYEc&callback=initMap"></script>
-    <script src="//cdn.jsdelivr.net/npm/pouchdb@7.1.1/dist/pouchdb.min.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-app.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-auth.js"></script>
-    <!-- <script src="https://maps.googleapis.com/maps/api/js"></script> -->
-    <script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDVopOrp5HaI4c2pgBJLOhXOLQNoUZHYEc&callback=initMap"></script>
+        <script src="//cdn.jsdelivr.net/npm/pouchdb@7.1.1/dist/pouchdb.min.js">
+        </script>
+        <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-app.js">
+        </script>
+        <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-firestore.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-auth.js"></script>
+        <!-- <script src="https://maps.googleapis.com/maps/api/js"></script> -->
+        <script type="text/javascript" src="js/index.js"></script>
 
 </body>
 
