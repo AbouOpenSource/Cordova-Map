@@ -67,7 +67,8 @@ function successCB() {
 }
 
 function insert(item) {
-    item.executeSql('INSERT INTO PARTICIPATIONS (name) VALUES ("' + participation + '")');
+    alert("insert part" + participation)
+        //item.executeSql('INSERT INTO PARTICIPATIONS (name) VALUES ("' + participation + '")');
 }
 
 function searchIfInDB(item) {
@@ -85,36 +86,60 @@ function callback(tx, results) {
         "<div data-role=\"header\">" + "Mes participations" +
         "</div>" +
         "<div role = \"main\" class = \"ui-content\" >" +
-        "<ul data-role=\"listview\" data-inset=\"true\" data-theme=\"a\">"
+        "<ul data-role=\"listview\" data-inset=\"true\" data-theme=\"a\" id=\"listpart\">"
 
 
 
     if (results.rows.length == 0) {
         alert("0")
     } else {
-        //alert("1")
+        alert(results.rows.length)
+
+        var test = false
+
+
+
+
 
 
         for (var i = 0; i < results.rows.length; i++) {
-            var docRef = db.collection("activites").doc(results.rows.item(i).name);
-            //element += "<li>" + 'doc.data().name' + "</li>"
-            docRef.get().then(function(doc) {
-                alert(doc.data().name)
-                    //changeValue("<li>" + doc.data().name + "</li>")
-                element += "<li>" + 'doc.data().name' + "</li>"
-                resolve(element);
-            }).catch(function(error) {
-                console.log("Error getting document:", error);
-            });
-            //var activite = db.collection('activites').doc(results.rows.item(i).name).get()
 
+
+            if (test == false) {
+                var docRef = db.collection("activites").doc(results.rows.item(i).name);
+                docRef.get().then(function(doc) {
+                    element += "<li>" + doc.data().name + "     <span id=\"datespan\" style=\"text-align: right;\">   " + doc.data().date + "</span></li>"
+                    strTxt = strTxt + element
+                    strTxt += "</ul></div><div data-role=\"footer\" data-position=\"fixed\"><div data-role=\"navbar\"><ul><li><a href=\"index.html#mapSide\" data-icon=\"grid\">Map Activity</a></li><li><a href=\"index.html#list\" data-icon=\"star\">List of Activity</a></li><li><a href=\"index.html#participate\" data-icon=\"heart\" class=\"ui-btn-active ui-state-persist\">List of Particpation</a></li></ul></div></div></div></div>"
+                    $("body").append(strTxt);
+
+                    // resolve(element);
+                }).catch(function(error) {
+                    console.log("Error getting document:", error);
+                });
+            } else {
+
+                var docRef = db.collection("activites").doc(results.rows.item(i).name);
+                docRef.get().then(function(doc) {
+
+                    $("#listpart").append(" <li> " + doc.data().name + "<span id = \"datespan\" style=\"text-align: right;\">   " + doc.data().date + "</span></li>");
+                    // resolve(element);
+                }).catch(function(error) {
+                    console.log("Error getting document:", error);
+                });
+
+
+
+
+
+            }
+
+            test = true
         }
 
 
     }
-    strTxt = strTxt + element
-    strTxt += "</ul></div><div data-role=\"footer\" data-position=\"fixed\"><h4>Copyright</h4></div></div>"
-    $("body").append(strTxt);
+
 }
 
 function changeValue(elementp) {
@@ -216,25 +241,6 @@ function initMap() {
         $('#myPopupDiv').popup('open');
         console.log("click sur map")
     });
-
-
-    //  }
-
-    // Try HTML5 geolocation.
-    /*  if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-              var pos = {
-                  lat: position.coords.latitude,
-                  lng: position.coords.longitude
-              };
-
-          }, function() {
-              handleLocationError(true, infoWindow, map.getCenter());
-          });
-      } else {
-          // Browser doesn't support Geolocation
-          handleLocationError(false, infoWindow, map.getCenter());
-      }*/
 
 }
 
@@ -385,6 +391,7 @@ function addParticipate(id) {
                         participants: [user].concat(doc.data().participants)
                     })
                     .then(function() {
+                        local_db.transaction(insert, errorCB, successCB)
                         console.log("Document successfully updated!");
                     })
                     .catch(function(error) {
@@ -405,8 +412,8 @@ function addParticipate(id) {
         console.log("Error getting document:", error);
     });
 
-    alert(participation)
-    local_db.transaction(insert, errorCB, successCB)
+
+
 
 }
 
@@ -571,15 +578,10 @@ function connect() {
     });
 
 
-    btnLogouta.addEventListener('click', function() {
-        firebase.auth().signOut();
-        console.log("je suis deconnecté")
-    })
-
-
     btnLogout.addEventListener('click', function() {
         firebase.auth().signOut();
         console.log("je suis deconnecté")
+        window.location = "index.html";
     });
 
 }

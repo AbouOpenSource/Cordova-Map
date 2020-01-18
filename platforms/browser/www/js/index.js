@@ -96,28 +96,30 @@ function callback(tx, results) {
 
 
         for (var i = 0; i < results.rows.length; i++) {
-            var docRef = db.collection("activites").doc();
+            var docRef = db.collection("activites").doc(results.rows.item(i).name);
             docRef.get().then(function(doc) {
-                // Document was found in the cache. If no cached document exists,
-                // an error will be returned to the 'catch' block below.
-                element += "<li>" + doc.data() + "</li>"
+                element += "<li>" + doc.data().name + "</li>"
+                strTxt = strTxt + element
+                strTxt += "</ul></div><div data-role=\"footer\" data-position=\"fixed\"><div data-role=\"navbar\"><ul><li><a href=\"index.html#mapSide\" data-icon=\"grid\">Map Activity</a></li><li><a href=\"index.html#list\" data-icon=\"star\">List of Activity</a></li><li><a href=\"index.html#participate\" data-icon=\"heart\">List of Activity</a></li></ul></div></div></div></div>"
+                $("body").append(strTxt);
 
-                console.log("Cached document data:", );
+                // resolve(element);
             }).catch(function(error) {
-                console.log("Error getting cached document:", error);
+                console.log("Error getting document:", error);
             });
-            //var activite = db.collection('activites').doc(results.rows.item(i).name).get()
-            // element += "<li>" + results.rows.item(i).name + "</li>"
+            alert(element)
+                //var activite = db.collection('activites').doc(results.rows.item(i).name).get()
 
         }
 
 
     }
-    strTxt = strTxt + element
-    strTxt += "</ul></div><div data-role=\"footer\" data-position=\"fixed\"><h4>Copyright</h4></div></div>"
-    $("body").append(strTxt);
+
 }
 
+function changeValue(elementp) {
+    element = element + elementp
+}
 
 
 function callbackSuccess(tx, results) {
@@ -434,7 +436,6 @@ function saveData(nom, loc, description) {
 
 function renderText(description, name, date, id) {
     console.log(date)
-
     var d = new Date(Date.parse(date));
     return "<h3 >" + name + "</h3>" +
         "<p>" + String(description).replace(/(.{40})/g, "$1<br>") + "<br>" +
@@ -447,9 +448,6 @@ function getList() {
     var db = firebase.firestore();
     var ul = document.getElementById("listPlace");
     var li = document.createElement("li");
-
-
-
     db.collection("places").get()
         .then((querySnapshot) => {
 
@@ -460,10 +458,7 @@ function getList() {
 
             })
         })
-
-
 }
-
 
 function getListActivities() {
     var db = firebase.firestore();
@@ -478,7 +473,6 @@ function getListActivities() {
 
     db.collection("activites").get()
         .then((querySnapshot) => {
-
             querySnapshot.forEach((doc) => {
                 var li = document.createElement("li");
                 li.appendChild(document.createTextNode(doc.data().name));
@@ -489,11 +483,7 @@ function getListActivities() {
                 });
             })
         })
-
-
 }
-
-
 
 
 
@@ -533,14 +523,6 @@ function connect() {
         const number = txtNumber.value
         const auth = firebase.auth();
         //Sign up
-
-
-
-
-
-
-
-
 
 
         const promise = auth.createUserWithEmailAndPassword(email, password).then(result => {
@@ -587,13 +569,6 @@ function connect() {
                 //window.location = "index.html";
         }
     });
-
-
-    btnLogouta.addEventListener('click', function() {
-        firebase.auth().signOut();
-        console.log("je suis deconnecté")
-    })
-
 
     btnLogout.addEventListener('click', function() {
         firebase.auth().signOut();
@@ -642,15 +617,9 @@ function loadActivityAll() {
 
             })
         })
-
-
-
-
-
 }
 
 function loadActivity(id) {
-
     var name = document.getElementById("name").innerHTML = '';
     var description = document.getElementById("description").innerHTML = '';
     var listParticipant = document.getElementById("listParticipant");
